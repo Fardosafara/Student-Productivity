@@ -1,344 +1,2025 @@
 <!DOCTYPE html>
-<!-- Declares the document type as HTML5 -->
 <html lang="en">
-<!-- Opens the HTML document and sets the language to English -->
 <head>
-    <!-- Begins the head section, which contains metadata and styles -->
     <meta charset="UTF-8">
-    <!-- Specifies the character encoding as UTF-8 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Ensures the page is responsive by setting the viewport width to the device's width -->
-    <title>Student Productivity To-Do List</title>
-    <!-- Sets the title of the webpage (shown in the browser tab) -->
+    <title>Student Productivity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* General Styling for Body */
+        /* General Styling */
+        :root {
+            --primary-color: #0000ff;
+            --primary-light: #1e90ff;
+            --primary-dark: #0000cc;
+            --accent-color: #ff6b00;
+            --light-bg: #f9f9f9;
+            --dark-bg: #333;
+            --text-dark: #333;
+            --text-light: #fff;
+            --text-muted: #777;
+            --border-radius: 8px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Arial', sans-serif; /* Sets the font to Arial */
-            background-color: white; /* White background */
-            margin: 0; /* Removes default margin */
-            padding: 0; /* Removes default padding */
-            color: black; /* Black text color */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+        }
+
+        .btn-accent:hover {
+            background-color: #e05e00;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background-color: var(--accent-color);
+            bottom: -10px;
+            left: 25%;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            gap: 30px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         /* Navbar Styling */
         .navbar {
-            background-color: #0000ff; /* Blue background */
-            color: white; /* White text */
-            padding: 15px 20px; /* Adds padding */
-            display: flex; /* Uses flexbox for layout */
-            justify-content: space-between; /* Spaces items evenly */
-            align-items: center; /* Centers items vertically */
-            position: sticky; /* Makes navbar sticky */
-            top: 0; /* Sticks to the top of the page */
-            z-index: 1000; /* Ensures navbar stays on top */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adds shadow */
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 10px 0;
+            background-color: rgba(0, 0, 255, 0.95);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .navbar h1 {
-            font-size: 24px; /* Sets font size */
-            margin: 0; /* Removes margin */
-            letter-spacing: 1px; /* Adds spacing between letters */
+            font-size: 24px;
+            margin: 0;
+            letter-spacing: 1px;
         }
 
-        .navbar .logo {
-    height: 80px; /* Adjust the height as needed */
-    width: auto; /* Maintains aspect ratio */
-}
+        .logo {
+            max-height: 80px;
+            width: auto;
+        }
 
         .navbar ul {
-            list-style: none; /* Removes bullet points */
-            margin: 0; /* Removes margin */
-            padding: 0; /* Removes padding */
-            display: flex; /* Uses flexbox for layout */
-            gap: 20px; /* Adds spacing between list items */
-        }
-
-        .navbar ul li {
-            display: inline; /* Displays list items inline */
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
         }
 
         .navbar ul li a {
-            color: white; /* White text */
-            text-decoration: none; /* Removes underline */
-            font-size: 16px; /* Sets font size */
-            transition: color 0.3s; /* Adds hover transition */
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
         }
 
-        .navbar ul li a:hover {
-            color: #cccccc; /* Light gray on hover */
+        .navbar ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--text-light);
+            bottom: 0;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .navbar ul li a:hover::after {
+            width: 100%;
         }
 
         /* Hamburger Menu for Small Screens */
         .navbar .menu-icon {
-            display: none; /* Hides the menu icon by default */
-            font-size: 24px; /* Sets icon size */
-            cursor: pointer; /* Changes cursor to pointer */
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
         }
 
-        /* Header Styling */
-        header {
-            background-color: #0000ff; /* Blue background */
-            color: white; /* White text */
-            padding: 80px 20px; /* Adds padding */
-            text-align: center; /* Centers text */
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('hero.jpg') 
+                        no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-light);
+            padding-top: 80px;
         }
 
-        header h1 {
-            font-size: 36px; /* Sets font size */
-            font-weight: bold; /* Makes text bold */
-            letter-spacing: 2px; /* Adds spacing between letters */
-            margin: 0; /* Removes margin */
-            animation: fadeIn 2s ease-in-out; /* Adds fade-in animation */
+        .hero-content {
+            max-width: 800px;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            animation: fadeIn 1s ease-in-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; } /* Starts with 0 opacity */
-            to { opacity: 1; } /* Ends with full opacity */
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Main Content Styling */
-        main {
-            padding: 40px 20px; /* Adds padding */
-            max-width: 1000px; /* Sets max width */
-            margin: 0 auto; /* Centers the content */
+        .hero h1 {
+            font-size: 48px;
+            margin: 0 0 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
-        /* Section Titles Styling */
-        h2 {
-            color: #0000ff; /* Blue color for heading */
-            font-size: 32px; /* Sets font size */
-            margin-bottom: 20px; /* Adds bottom margin */
+        .hero p {
+            font-size: 20px;
+            margin: 20px 0 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
-        h3 {
-            text-align: left; /* Aligns text to the left */
-            color: #0000ff; /* Blue for section headers */
-            font-size: 22px; /* Sets font size */
-            margin-top: 20px; /* Adds top margin */
-            padding-bottom: 8px; /* Adds bottom padding */
-            border-bottom: 3px solid #0000ff; /* Blue border */
+        .hero-button {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            color:white;
         }
 
-        /* Task Grid Layout */
-        .task-grid {
-            display: grid; /* Uses grid layout */
-            grid-template-columns: repeat(2, 1fr); /* Two-column grid */
-            gap: 15px; /* Adds spacing between grid items */
-            margin-top: 10px; /* Adds top margin */
+        
+
+        /* About Section */
+        .about {
+            background-color: var(--light-bg);
         }
 
-        .task {
-            display: flex; /* Uses flexbox for layout */
-            align-items: center; /* Centers items vertically */
-            background: #f0f0f0; /* Light gray for task background */
-            padding: 15px; /* Adds padding */
-            border-radius: 8px; /* Rounds corners */
-            transition: transform 0.3s, box-shadow 0.3s; /* Adds hover transition */
-            text-align: left; /* Aligns text to the left */
-            cursor: pointer; /* Changes cursor to pointer */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
         }
 
-        .task:hover {
-            transform: translateY(-5px); /* Lift effect on hover */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        .about-image {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
         }
 
-        /* Custom Checkbox Styling */
-        input[type="checkbox"] {
-            appearance: none; /* Removes default checkbox style */
-            width: 26px; /* Sets width */
-            height: 26px; /* Sets height */
-            border: 3px solid #0000ff; /* Blue border */
-            border-radius: 6px; /* Rounds corners */
-            margin-right: 12px; /* Adds right margin */
-            cursor: pointer; /* Changes cursor to pointer */
-            transition: 0.3s; /* Adds transition */
-            position: relative; /* Sets position for checkmark */
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
         }
 
-        input[type="checkbox"]:checked {
-            background-color: #0000ff; /* Blue background when checked */
-            border-color: #0000ff; /* Blue border when checked */
+        .about-image:hover img {
+            transform: scale(1.05);
         }
 
-        input[type="checkbox"]:checked::after {
-            content: '✔'; /* Adds checkmark */
-            font-size: 18px; /* Sets checkmark size */
-            color: white; /* White checkmark */
-            position: absolute; /* Positions checkmark */
-            left: 5px; /* Adjusts horizontal position */
-            top: 1px; /* Adjusts vertical position */
-            font-weight: bold; /* Makes checkmark bold */
+        .about-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
         }
 
-        label {
-            font-size: 18px; /* Sets font size */
-            color: black; /* Black text */
-            cursor: pointer; /* Changes cursor to pointer */
-            flex-grow: 1; /* Allows label to grow */
+        .about-text p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        .mission {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .mission h3 {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: white;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            background-color: rgba(0, 0, 255, 0.1);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background-color: var(--primary-color);
+            color: white;
+            transform: rotateY(360deg);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+        }
+
+        /* Services Section */
+        .services {
+            background-color: var(--light-bg);
+        }
+
+        .service-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .service-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-img {
+            transform: scale(1.1);
+        }
+
+        .service-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: white;
+            transition: var(--transition);
+        }
+
+        .service-card:hover .service-content {
+            background: linear-gradient(transparent, rgba(0, 0, 255, 0.8));
+        }
+
+        .service-content h3 {
+            margin-bottom: 10px;
+        }
+
+        .service-content p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            background-color: white;
+        }
+
+        .testimonial-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .testimonial-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            border: 5px solid var(--primary-light);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .testimonial-text::before,
+        .testimonial-text::after {
+            content: '"';
+            font-size: 50px;
+            color: rgba(0, 0, 255, 0.1);
+            position: absolute;
+        }
+
+        .testimonial-text::before {
+            top: -20px;
+            left: -15px;
+        }
+
+        .testimonial-text::after {
+            bottom: -40px;
+            right: -15px;
+        }
+
+        .testimonial-name {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .testimonial-role {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* FAQ Section */
+        .faq {
+            background-color: var(--light-bg);
+        }
+
+        .accordion {
+            margin-bottom: 15px;
+        }
+
+        .accordion-header {
+            background-color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .accordion-header:hover {
+            background-color: rgba(0, 0, 255, 0.05);
+        }
+
+        .accordion-header.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .accordion-icon {
+            transition: var(--transition);
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            background-color: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .accordion-content-inner {
+            padding: 20px;
+            color: var(--text-muted);
+        }
+
+        /* Contact Section */
+        .contact {
+            background-color: white;
+        }
+
+        .contact-info {
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-icon {
+            font-size: 20px;
+            color: var(--primary-color);
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 255, 0.1);
+        }
+
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .newsletter-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .newsletter-text {
+            flex: 1;
+        }
+
+        .newsletter-text h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .newsletter-text p {
+            opacity: 0.9;
+        }
+
+        .newsletter-form {
+            flex: 1;
+            display: flex;
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 16px;
+        }
+
+        .newsletter-form button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .newsletter-form button:hover {
+            background-color: #e05e00;
         }
 
         /* Footer Styling */
         footer {
-            background-color: #0000ff; /* Blue background */
-            color: white; /* White text */
-            text-align: center; /* Centers text */
-            padding: 20px; /* Adds padding */
-            position: sticky; /* Makes footer sticky */
-            bottom: 0; /* Sticks to the bottom */
-            z-index: 1000; /* Ensures footer stays on top */
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 60px 0 20px;
         }
 
-        footer p {
-            margin: 0; /* Removes margin */
-            font-size: 16px; /* Sets font size */
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        /* Responsive Design for Smaller Screens */
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-light);
+            bottom: 0;
+            left: 0;
+        }
+
+        .footer-column p {
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Design - Enhanced */
+        @media (max-width: 992px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .newsletter-form {
+                margin: 20px auto 0;
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section-title h2 {
+                font-size: 32px;
+            }
+            
+            .section-title p {
+                font-size: 16px;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+        }
+
         @media (max-width: 768px) {
-            /* Navbar Responsive */
+            .navbar-container {
+                padding: 0 15px;
+            }
+
             .navbar ul {
-                display: none; /* Hides navbar links */
-                flex-direction: column; /* Stacks links vertically */
-                gap: 10px; /* Adds spacing between links */
-                width: 100%; /* Full width */
-                background-color: #0000ff; /* Blue background */
-                position: absolute; /* Positions menu absolutely */
-                top: 60px; /* Positions below navbar */
-                left: 0; /* Aligns to the left */
-                padding: 10px 0; /* Adds padding */
-                text-align: center; /* Centers menu items */
+                display: none;
+                flex-direction: column;
+                gap: 0;
+                width: 100%;
+                background-color: var(--primary-color);
+                position: absolute;
+                top: 60px;
+                left: 0;
+                padding: 0;
+                text-align: center;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            }
+
+            .navbar ul li {
+                margin: 0;
+            }
+
+            .navbar ul li a {
+                display: block;
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .navbar ul li:last-child a {
+                border-bottom: none;
             }
 
             .navbar ul.active {
-                display: flex; /* Shows menu when active */
+                display: block;
             }
 
             .navbar .menu-icon {
-                display: block; /* Shows hamburger menu icon */
+                display: block;
             }
 
-            /* Header Responsive */
-            header h1 {
-                font-size: 28px; /* Reduces font size */
+            .hero h1 {
+                font-size: 36px;
             }
 
-            /* Task Grid Responsive */
-            .task-grid {
-                grid-template-columns: repeat(1, 1fr); /* Single-column grid on smaller screens */
+            .hero p {
+                font-size: 16px;
             }
 
-            /* Main Content Responsive */
-            main {
-                padding: 20px; /* Reduces padding */
+            .section-title h2 {
+                font-size: 28px;
             }
 
-            /* Footer Responsive */
-            footer {
-                font-size: 14px; /* Reduces font size */
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .contact-info, .contact-form {
+                margin-bottom: 30px;
+            }
+            
+            .hero-content {
+                padding: 20px;
+            }
+            
+            .feature-card {
+                padding: 20px 15px;
+            }
+            
+            .accordion-header {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+            
+            .testimonial-card {
+                padding: 20px 15px;
+            }
+            
+            .service-img {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-form input {
+                border-radius: var(--border-radius);
+                margin-bottom: 10px;
+            }
+
+            .newsletter-form button {
+                border-radius: var(--border-radius);
+                padding: 12px;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .hero p {
+                font-size: 14px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                color:#fff
+            }
+            
+            .section-title h2 {
+                font-size: 24px;
+            }
+            
+            .section-title p {
+                font-size: 14px;
+            }
+            
+            .about-text h2 {
+                font-size: 24px;
+            }
+            
+            .mission h3 {
+                font-size: 20px;
+            }
+            
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                line-height: 60px;
+                font-size: 30px;
+            }
+            
+            .feature-card h3 {
+                font-size: 18px;
+            }
+            
+            .contact-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+            
+            .footer-column h3::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .footer-column {
+                text-align: center;
+            }
+        }
+        
+        /* Additional responsive fixes for very small screens */
+        @media (max-width: 400px) {
+            .hero-content {
+                padding: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 24px;
+            }
+            
+            .section {
+                padding: 40px 0;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .navbar h1 {
+                font-size: 20px;
+            }
+            
+            .logo {
+                max-height: 35px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
     <!-- Navbar -->
-    <nav class="navbar">
-        <img src="logo2.png" alt="Student Productivity Logo" class="logo"> <!-- Logo image -->
-        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div> <!-- Hamburger menu icon -->
-        <ul id="nav-menu">
-            <li><a href="#setup">Setup</a></li> <!-- Navigation link -->
-            <li><a href="#time-management">Time Management</a></li> <!-- Navigation link -->
-            <li><a href="#focus">Focus</a></li> <!-- Navigation link -->
-            <li><a href="#technology">Technology</a></li> <!-- Navigation link -->
-            <li><a href="#studying">Studying</a></li> <!-- Navigation link -->
-            <li><a href="#balance">Balance</a></li> <!-- Navigation link -->
-        </ul>
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <img src="logo2.png" alt="Student Productivity Logo" class="logo">
+            <div class="menu-icon" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <ul id="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
     </nav>
-
-    <!-- Header Section -->
-    <header>
-        <h1>Student Productivity To-Do List</h1> <!-- Header title -->
-    </header>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Setting Up for Productivity Section -->
-        <section id="setup">
-            <h3>🛠 Setting Up for Productivity</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Set SMART goals</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Prioritize tasks effectively</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Break down large tasks</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Set a weekly review</label></div> <!-- Task item -->
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Welcome to Student Productivity</h1>
+                <p>Your ultimate companion for achieving academic success and maintaining a balanced life.</p>
+                <div class="hero-buttons1">
+                    <button class="btn" onclick="location.href='#features'">Explore Features</button>
+                    <button class="btn btn-secondary" onclick="location.href='#about'">Learn More</button>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Managing Time Efficiently Section -->
-        <section id="time-management">
-            <h3>⏳ Managing Time Efficiently</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Use a calendar for planning</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Create daily to-do lists</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Apply time blocking</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Set personal deadlines</label></div> <!-- Task item -->
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Student Productivity</h2>
+                <p>Empowering students to reach their full potential through effective time management and productivity tools.</p>
             </div>
-        </section>
-
-        <!-- Staying Focused Section -->
-        <section id="focus">
-            <h3>🎯 Staying Focused</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Eliminate distractions</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Use the Pomodoro technique</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Practice mindfulness</label></div> <!-- Task item -->
+            <div class="about-content">
+                <div class="about-image">
+                    <img src="about.png" alt="Students collaborating">
+                </div>
+                <div class="about-text">
+                    <h2>Why Choose Us?</h2>
+                    <p>
+                        Student Productivity Hub is designed to help students manage their time effectively, stay focused, and achieve their academic goals. 
+                        With a combination of proven techniques and modern tools, we empower students to unlock their full potential.
+                    </p>
+                    <p>
+                        Our platform combines cutting-edge technology with research-backed productivity methods to create a comprehensive solution for students at all levels.
+                    </p>
+                    <div class="mission">
+                        <h3>Our Mission</h3>
+                        <p>
+                            To provide students with the resources and tools they need to stay organized, motivated, and productive. 
+                            We believe that with the right strategies, every student can excel academically while maintaining a healthy work-life balance.
+                        </p>
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Leveraging Technology Section -->
-        <section id="technology">
-            <h3>💻 Leveraging Technology</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Use a task management app</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Organize notes with an app</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Track time with productivity apps</label></div> <!-- Task item -->
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Features</h2>
+                <p>Discover the tools that will transform your academic journey and boost your productivity.</p>
             </div>
-        </section>
-
-        <!-- Studying Smarter Section -->
-        <section id="studying">
-            <h3>📚 Studying Smarter</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Use Active Recall</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Apply Spaced Repetition</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Take effective notes</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Join a study group</label></div> <!-- Task item -->
+            <div class="grid grid-4">
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Smart Task Management</h3>
+                    <p>Organize your assignments, projects, and exams with our intuitive task management system that prioritizes your work.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Time Tracking</h3>
+                    <p>Monitor how you spend your study time and identify areas for improvement with detailed analytics.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Focus Techniques</h3>
+                    <p>Implement proven focus methods like Pomodoro, Deep Work, and more to maximize your concentration.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Smart Scheduling</h3>
+                    <p>Create balanced study schedules that adapt to your energy levels and learning preferences.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Tracking</h3>
+                    <p>Visualize your academic progress and celebrate milestones to stay motivated throughout the semester.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Collaborative Study</h3>
+                    <p>Connect with classmates for virtual study sessions and share resources securely.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Smart Reminders</h3>
+                    <p>Never miss a deadline with customizable notifications that keep you on track.</p>
+                </div>
+                <div class="feature-card card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Learning Resources</h3>
+                    <p>Access a library of study techniques, templates, and guides to enhance your learning experience.</p>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Maintaining Work-Life Balance Section -->
-        <section id="balance">
-            <h3>⚖️ Maintaining Work-Life Balance</h3> <!-- Section title -->
-            <div class="task-grid">
-                <div class="task"><input type="checkbox"><label> Get 7-9 hours of sleep</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Exercise regularly</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Spend time with family & friends</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Engage in hobbies</label></div> <!-- Task item -->
-                <div class="task"><input type="checkbox"><label> Practice mindfulness</label></div> <!-- Task item -->
+          <!--productivity-guide section -->
+<section id="Productivity Guide" class="Productivity Guide"></section>
+    <div class="container">
+        <div class="section-title">
+            <h2>Productivity Guide</h2>
+            <p>Master proven strategies for academic excellence</p>
+        </div>
+
+        <!-- Hero Banner -->
+        <div class="guide-hero">
+            <div class="hero-content">
+                <h3>Importance of Productivity</h3>
+                <p>Productivity empowers students to manage their time efficiently, prioritize tasks, and achieve their academic goals. By developing effective productivity habits, students can reduce stress, improve their academic performance, and gain a sense of accomplishment.</p>
             </div>
-        </section>
-    </main>
+            <div class="hero-image">
+                <img src="hero bunner.png" alt="Student studying productively">
+            </div>
+        </div>
 
-    <!-- Footer Section -->
+        <!-- Key Principles -->
+        <div class="principles-grid">
+            <div class="principle-card">
+                <div class="card-image">
+                    <img src="set goal.jpg" alt="Setting clear goals">
+                    <div class="card-overlay">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>Set Clear Goals</h4>
+                    <p>Define specific, measurable, achievable, relevant, and time-bound goals.</p>
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <div class="card-image">
+                    <img src="prioritize task.png" alt="Task prioritization">
+                    <div class="card-overlay">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>Prioritize Tasks</h4>
+                    <p>Focus on important tasks first and eliminate less critical ones.</p>
+                </div>
+            </div>
+
+            <div class="principle-card">
+                <div class="card-image">
+                    <img src="breakdown task.png" alt="Breaking down tasks">
+                    <div class="card-overlay">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h4>Break Down Tasks</h4>
+                    <p>Divide large projects into smaller, manageable steps.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Time Management -->
+        <div class="time-management">
+            <h3 class="section-subtitle">Time Management Strategies</h3>
+            <div class="strategy-grid">
+                <div class="strategy-card">
+                    <div class="strategy-image">
+                        <img src="calendar.png" alt="Calendar planning">
+                    </div>
+                    <div class="strategy-content">
+                        <i class="far fa-calendar-alt"></i>
+                        <h4>Smart Calendar</h4>
+                        <ul>
+                            <li>Schedule tasks effectively</li>
+                            <li>Set reminders for deadlines</li>
+                            <li>Track your progress</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-image">
+                        <img src="time blocking.jpg" alt="Time blocking">
+                    </div>
+                    <div class="strategy-content">
+                        <i class="fas fa-hourglass-half"></i>
+                        <h4>Time Blocking</h4>
+                        <ul>
+                            <li>Organize your day efficiently</li>
+                            <li>Create focused work periods</li>
+                            <li>Include regular breaks</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="strategy-card">
+                    <div class="strategy-image">
+                        <img src="task.png" alt="Task management">
+                    </div>
+                    <div class="strategy-content">
+                        <i class="fas fa-list-check"></i>
+                        <h4>Task Management</h4>
+                        <ul>
+                            <li>Prioritize important work</li>
+                            <li>Monitor completion rates</li>
+                            <li>Adjust schedules as needed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Techniques -->
+        <div class="study-techniques">
+            <h3 class="section-subtitle">Effective Study Techniques</h3>
+            <div class="techniques-grid">
+                <div class="technique-card">
+                    <img src="active recall.png" alt="Active recall">
+                    <div class="technique-content">
+                        <i class="fas fa-brain"></i>
+                        <h4>Active Recall</h4>
+                        <p>Test yourself regularly on the material to strengthen memory retention.</p>
+                    </div>
+                </div>
+
+                <div class="technique-card">
+                    <img src="space.png" alt="Spaced repetition">
+                    <div class="technique-content">
+                        <i class="fas fa-clock"></i>
+                        <h4>Spaced Repetition</h4>
+                        <p>Review information at increasing intervals for better long-term retention.</p>
+                    </div>
+                </div>
+
+                <div class="technique-card">
+                    <img src="study group.png" alt="Group study">
+                    <div class="technique-content">
+                        <i class="fas fa-users"></i>
+                        <h4>Group Study</h4>
+                        <p>Collaborate with peers to share knowledge and gain new perspectives.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Work-Life Balance -->
+        <div class="balance-section">
+            <h3 class="section-subtitle">Maintaining Balance</h3>
+            <div class="balance-grid">
+                <div class="balance-card">
+                    <img src="sleep.jpg" alt="Quality sleep">
+                    <div class="balance-overlay">
+                        <i class="fas fa-bed"></i>
+                        <h4>Quality Sleep</h4>
+                        <p>Aim for 7-9 hours of sleep each night for optimal performance.</p>
+                    </div>
+                </div>
+
+                <div class="balance-card">
+                    <img src="exercises.png" alt="Regular exercise">
+                    <div class="balance-overlay">
+                        <i class="fas fa-running"></i>
+                        <h4>Regular Exercise</h4>
+                        <p>Stay active with regular physical activity throughout the week.</p>
+                    </div>
+                </div>
+
+                <div class="balance-card">
+                    <img src="social time.png" alt="Social connections">
+                    <div class="balance-overlay">
+                        <i class="fas fa-heart"></i>
+                        <h4>Social Time</h4>
+                        <p>Maintain connections with friends and family for emotional well-being.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.productivity-guide {
+    background: #ffffff;
+    padding: 80px 0;
+}
+
+/* Hero Banner */
+.guide-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 60px;
+    background: #0000ff;
+    border-radius: 12px;
+    overflow: hidden;
+    color: white;
+}
+
+.hero-content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-content h3 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    height: 400px;
+}
+
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Principles Grid */
+.principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.principle-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 255, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.principle-card:hover {
+    transform: translateY(-10px);
+}
+
+.card-image {
+    position: relative;
+    height: 200px;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.principle-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.card-overlay i {
+    color: white;
+    font-size: 40px;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h4 {
+    color: #0000ff;
+    margin-bottom: 10px;
+}
+
+/* Strategy Cards */
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.strategy-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 255, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.strategy-card:hover {
+    transform: translateY(-10px);
+}
+
+.strategy-image {
+    height: 200px;
+}
+
+.strategy-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.strategy-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.strategy-content i {
+    color: #0000ff;
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.strategy-content h4 {
+    color: #0000ff;
+    margin-bottom: 15px;
+}
+
+.strategy-content ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.strategy-content ul li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.strategy-content ul li:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    background: #ff6b00;
+    border-radius: 50%;
+}
+
+/* Technique Cards */
+.techniques-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.technique-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 255, 0.1);
+    height: 300px;
+}
+
+.technique-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.technique-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0, 0, 255, 0.9));
+    color: white;
+    transform: translateY(100px);
+    transition: transform 0.3s ease;
+}
+
+.technique-card:hover .technique-content {
+    transform: translateY(0);
+}
+
+.technique-content i {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Balance Cards */
+.balance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.balance-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 255, 0.1);
+    height: 300px;
+}
+
+.balance-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.balance-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 255, 0.8);
+    color: white;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.balance-card:hover .balance-overlay {
+    opacity: 1;
+}
+
+.balance-overlay i {
+    font-size: 40px;
+    color: #ff6b00;
+    margin-bottom: 15px;
+}
+
+.section-subtitle {
+    text-align: center;
+    font-size: 28px;
+    color: #0000ff;
+    margin: 60px 0 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .guide-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-image {
+        height: 300px;
+    }
+
+    .principles-grid,
+    .strategy-grid,
+    .techniques-grid,
+    .balance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .principles-grid,
+    .strategy-grid,
+    .techniques-grid,
+    .balance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-content {
+        padding: 30px;
+    }
+
+    .hero-content h3 {
+        font-size: 24px;
+    }
+
+    .section-subtitle {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-image {
+        height: 200px;
+    }
+
+    .card-image {
+        height: 150px;
+    }
+
+    .strategy-content {
+        padding: 15px;
+    }
+
+    .technique-card,
+    .balance-card {
+        height: 250px;
+    }
+}
+</style>
+
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>Comprehensive solutions designed to address every aspect of student productivity.</p>
+            </div>
+            <div class="grid grid-3">
+                <div class="service-card">
+                    <img src="study planing.png" alt="Study Planning" class="service-img">
+                    <div class="service-content">
+                        <h3>Study Planning</h3>
+                        <p>Personalized study plans tailored to your learning style and academic goals.</p>
+                        <a href="#contact" class="btn btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="productivity coaching.png" alt="Productivity Coaching" class="service-img">
+                    <div class="service-content">
+                        <h3>Productivity Coaching</h3>
+                        <p>One-on-one sessions with productivity experts to optimize your workflow.</p>
+                        <a href="#contact" class="btn btn-sm">Learn More</a>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <img src="digital tools.png" alt="Digital Tools" class="service-img">
+                    <div class="service-content">
+                        <h3>Digital Tools Integration</h3>
+                        <p>Seamlessly connect your favorite apps and tools for a unified productivity system.</p>
+                        <a href="#contact" class="btn btn-sm">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Student Success Stories</h2>
+                <p>Hear from students who have transformed their academic performance with our platform.</p>
+            </div>
+            <div class="grid grid-3">
+                <div class="testimonial-card card">
+                    <img src="sumeya.jpg" alt="Sarah Johnson" class="testimonial-img">
+                    <div class="testimonial-text">
+                        The Student Productivity Hub completely changed how I approach my studies. I've improved my GPA from 3.2 to 3.8 in just one semester!
+                    </div>
+                    <div class="testimonial-name">Sumeya Ahmed</div>
+                    <div class="testimonial-role">Engineering Student</div>
+                </div>
+                <div class="testimonial-card card">
+                    <img src="peter.jpg" alt="Michael Chen" class="testimonial-img">
+                    <div class="testimonial-text">
+                        As a medical student with a packed schedule, this platform helped me find balance between studying and self-care. I'm more productive and less stressed.
+                    </div>
+                    <div class="testimonial-name">Peter Kivole</div>
+                    <div class="testimonial-role">Medical Student</div>
+                </div>
+                <div class="testimonial-card card">
+                    <img src="anita.jpg" alt="Emma Rodriguez" class="testimonial-img">
+                    <div class="testimonial-text">
+                        The focus techniques and time management strategies have been game-changers for me. I can now complete assignments in half the time it used to take!
+                    </div>
+                    <div class="testimonial-name">Anita Ali</div>
+                    <div class="testimonial-role">Business Student</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>Frequently Asked Questions</h2>
+                <p>Find answers to common questions about our platform and services.</p>
+            </div>
+            <div class="accordion-container">
+                <div class="accordion">
+                    <div class="accordion-header">
+                        How does Student Productivity Hub differ from other productivity sites?
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Unlike general productivity apps, Student Productivity  is specifically designed for academic success. Our platform integrates research-backed study techniques, academic planning tools, and student-specific features that address the unique challenges of educational environments.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Is there a free version available?
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Yes! We offer a free basic plan that includes essential productivity tools. Premium features are available through our affordable student subscription plans, with special discounts for educational institutions.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Can I sync my school calendar with the platform?
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Our platform integrates with Google Calendar, Outlook, and most university calendar systems to ensure all your academic commitments are in one place.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">
+                        How secure is my academic data on your platform?
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            We take data security seriously. All your information is encrypted and stored securely. We never share your personal data with third parties, and we comply with all educational privacy regulations including FERPA.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header">
+                        Do you offer support for students with learning disabilities?
+                        <span class="accordion-icon"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-content-inner">
+                            Yes, we've designed our platform to be accessible to all students. We offer specialized templates and tools for different learning styles and needs, including features that support students with ADHD, dyslexia, and other learning differences.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Get In Touch</h2>
+                <p>Have questions or feedback? We'd love to hear from you!</p>
+            </div>
+            <div class="grid grid-2">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Our Location</h3>
+                            <p>Kenya, Nairobi</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email Us</h3>
+                            <p>support@studentproductivity.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Call Us</h3>
+                            <p>+254 712345678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3>Support Hours</h3>
+                            <p>Monday - Friday: 8am - 8pm EST</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <p>Get the latest productivity tips, study hacks, and exclusive offers delivered to your inbox.</p>
+                </div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2025 Student Productivity. All rights reserved.</p> <!-- Footer text -->
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Student Productivity</h3>
+                    <p>Empowering students to achieve academic excellence through effective productivity strategies and tools.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Student Productivity. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- JavaScript for Hamburger Menu -->
+    <!-- JavaScript -->
     <script>
+        // Toggle Mobile Menu
         function toggleMenu() {
             const navMenu = document.getElementById('nav-menu');
-            navMenu.classList.toggle('active'); // Toggles the mobile menu
+            navMenu.classList.toggle('active');
         }
+    
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function () {
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('backToTop');
+    
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                backToTop.classList.add('active');
+            } else {
+                navbar.classList.remove('scrolled');
+                backToTop.classList.remove('active');
+            }
+        });
+    
+        // Back to Top Button Functionality
+        document.getElementById('backToTop').addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent default anchor behavior
+            window.scrollTo({
+                top: 0, // Scroll to the top of the page
+                behavior: 'smooth' // Smooth scrolling
+            });
+        });
+    
+        // Accordion Functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', function () {
+                    this.classList.toggle('active');
+    
+                    const content = this.nextElementSibling;
+                    if (this.classList.contains('active')) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    } else {
+                        content.style.maxHeight = 0;
+                    }
+    
+                    // Close other accordions
+                    accordionHeaders.forEach(otherHeader => {
+                        if (otherHeader !== this) {
+                            otherHeader.classList.remove('active');
+                            otherHeader.nextElementSibling.style.maxHeight = 0;
+                        }
+                    });
+                });
+            });
+        });
+    
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            this.reset();
+        });
+    
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+    
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+    
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+    
+                    // Close mobile menu if open
+                    const navMenu = document.getElementById('nav-menu');
+                    if (navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                    }
+                }
+            });
+        });
+    
+        // Add loading state to buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function () {
+                if (this.type === 'submit') {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                    setTimeout(() => {
+                        this.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                    }, 2000);
+                }
+            });
+        });
     </script>
 </body>
 </html>
