@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!-- Declares the document type as HTML5 -->
+<html lang="en">
+<!-- Opens the HTML document and sets the language to English -->
+<head>
+    <!-- Begins the head section, which contains metadata and styles -->
+    <meta charset="UTF-8">
+    <!-- Specifies the character encoding as UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ensures the page is responsive by setting the viewport width to the device's width -->
+    <title>Student Productivity To-Do List</title>
+    <!-- Sets the title of the webpage (shown in the browser tab) -->
+    <style>
+        /* General Styling for Body */
+        body {
+            font-family: 'Arial', sans-serif; /* Sets the font to Arial */
+            background-color: white; /* White background */
+            margin: 0; /* Removes default margin */
+            padding: 0; /* Removes default padding */
+            color: black; /* Black text color */
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #0000ff; /* Blue background */
+            color: white; /* White text */
+            padding: 15px 20px; /* Adds padding */
+            display: flex; /* Uses flexbox for layout */
+            justify-content: space-between; /* Spaces items evenly */
+            align-items: center; /* Centers items vertically */
+            position: sticky; /* Makes navbar sticky */
+            top: 0; /* Sticks to the top of the page */
+            z-index: 1000; /* Ensures navbar stays on top */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adds shadow */
+        }
+
+        .navbar h1 {
+            font-size: 24px; /* Sets font size */
+            margin: 0; /* Removes margin */
+            letter-spacing: 1px; /* Adds spacing between letters */
+        }
+
+        .navbar .logo {
+    height: 80px; /* Adjust the height as needed */
+    width: auto; /* Maintains aspect ratio */
+}
+
+        .navbar ul {
+            list-style: none; /* Removes bullet points */
+            margin: 0; /* Removes margin */
+            padding: 0; /* Removes padding */
+            display: flex; /* Uses flexbox for layout */
+            gap: 20px; /* Adds spacing between list items */
+        }
+
+        .navbar ul li {
+            display: inline; /* Displays list items inline */
+        }
+
+        .navbar ul li a {
+            color: white; /* White text */
+            text-decoration: none; /* Removes underline */
+            font-size: 16px; /* Sets font size */
+            transition: color 0.3s; /* Adds hover transition */
+        }
+
+        .navbar ul li a:hover {
+            color: #cccccc; /* Light gray on hover */
+        }
+
+        /* Hamburger Menu for Small Screens */
+        .navbar .menu-icon {
+            display: none; /* Hides the menu icon by default */
+            font-size: 24px; /* Sets icon size */
+            cursor: pointer; /* Changes cursor to pointer */
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #0000ff; /* Blue background */
+            color: white; /* White text */
+            padding: 80px 20px; /* Adds padding */
+            text-align: center; /* Centers text */
+        }
+
+        header h1 {
+            font-size: 36px; /* Sets font size */
+            font-weight: bold; /* Makes text bold */
+            letter-spacing: 2px; /* Adds spacing between letters */
+            margin: 0; /* Removes margin */
+            animation: fadeIn 2s ease-in-out; /* Adds fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; } /* Starts with 0 opacity */
+            to { opacity: 1; } /* Ends with full opacity */
+        }
+
+        /* Main Content Styling */
+        main {
+            padding: 40px 20px; /* Adds padding */
+            max-width: 1000px; /* Sets max width */
+            margin: 0 auto; /* Centers the content */
+        }
+
+        /* Section Titles Styling */
+        h2 {
+            color: #0000ff; /* Blue color for heading */
+            font-size: 32px; /* Sets font size */
+            margin-bottom: 20px; /* Adds bottom margin */
+        }
+
+        h3 {
+            text-align: left; /* Aligns text to the left */
+            color: #0000ff; /* Blue for section headers */
+            font-size: 22px; /* Sets font size */
+            margin-top: 20px; /* Adds top margin */
+            padding-bottom: 8px; /* Adds bottom padding */
+            border-bottom: 3px solid #0000ff; /* Blue border */
+        }
+
+        /* Task Grid Layout */
+        .task-grid {
+            display: grid; /* Uses grid layout */
+            grid-template-columns: repeat(2, 1fr); /* Two-column grid */
+            gap: 15px; /* Adds spacing between grid items */
+            margin-top: 10px; /* Adds top margin */
+        }
+
+        .task {
+            display: flex; /* Uses flexbox for layout */
+            align-items: center; /* Centers items vertically */
+            background: #f0f0f0; /* Light gray for task background */
+            padding: 15px; /* Adds padding */
+            border-radius: 8px; /* Rounds corners */
+            transition: transform 0.3s, box-shadow 0.3s; /* Adds hover transition */
+            text-align: left; /* Aligns text to the left */
+            cursor: pointer; /* Changes cursor to pointer */
+        }
+
+        .task:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        }
+
+        /* Custom Checkbox Styling */
+        input[type="checkbox"] {
+            appearance: none; /* Removes default checkbox style */
+            width: 26px; /* Sets width */
+            height: 26px; /* Sets height */
+            border: 3px solid #0000ff; /* Blue border */
+            border-radius: 6px; /* Rounds corners */
+            margin-right: 12px; /* Adds right margin */
+            cursor: pointer; /* Changes cursor to pointer */
+            transition: 0.3s; /* Adds transition */
+            position: relative; /* Sets position for checkmark */
+        }
+
+        input[type="checkbox"]:checked {
+            background-color: #0000ff; /* Blue background when checked */
+            border-color: #0000ff; /* Blue border when checked */
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: '✔'; /* Adds checkmark */
+            font-size: 18px; /* Sets checkmark size */
+            color: white; /* White checkmark */
+            position: absolute; /* Positions checkmark */
+            left: 5px; /* Adjusts horizontal position */
+            top: 1px; /* Adjusts vertical position */
+            font-weight: bold; /* Makes checkmark bold */
+        }
+
+        label {
+            font-size: 18px; /* Sets font size */
+            color: black; /* Black text */
+            cursor: pointer; /* Changes cursor to pointer */
+            flex-grow: 1; /* Allows label to grow */
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #0000ff; /* Blue background */
+            color: white; /* White text */
+            text-align: center; /* Centers text */
+            padding: 20px; /* Adds padding */
+            position: sticky; /* Makes footer sticky */
+            bottom: 0; /* Sticks to the bottom */
+            z-index: 1000; /* Ensures footer stays on top */
+        }
+
+        footer p {
+            margin: 0; /* Removes margin */
+            font-size: 16px; /* Sets font size */
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 768px) {
+            /* Navbar Responsive */
+            .navbar ul {
+                display: none; /* Hides navbar links */
+                flex-direction: column; /* Stacks links vertically */
+                gap: 10px; /* Adds spacing between links */
+                width: 100%; /* Full width */
+                background-color: #0000ff; /* Blue background */
+                position: absolute; /* Positions menu absolutely */
+                top: 60px; /* Positions below navbar */
+                left: 0; /* Aligns to the left */
+                padding: 10px 0; /* Adds padding */
+                text-align: center; /* Centers menu items */
+            }
+
+            .navbar ul.active {
+                display: flex; /* Shows menu when active */
+            }
+
+            .navbar .menu-icon {
+                display: block; /* Shows hamburger menu icon */
+            }
+
+            /* Header Responsive */
+            header h1 {
+                font-size: 28px; /* Reduces font size */
+            }
+
+            /* Task Grid Responsive */
+            .task-grid {
+                grid-template-columns: repeat(1, 1fr); /* Single-column grid on smaller screens */
+            }
+
+            /* Main Content Responsive */
+            main {
+                padding: 20px; /* Reduces padding */
+            }
+
+            /* Footer Responsive */
+            footer {
+                font-size: 14px; /* Reduces font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <img src="logo2.png" alt="Student Productivity Logo" class="logo"> <!-- Logo image -->
+        <div class="menu-icon" onclick="toggleMenu()">&#9776;</div> <!-- Hamburger menu icon -->
+        <ul id="nav-menu">
+            <li><a href="#setup">Setup</a></li> <!-- Navigation link -->
+            <li><a href="#time-management">Time Management</a></li> <!-- Navigation link -->
+            <li><a href="#focus">Focus</a></li> <!-- Navigation link -->
+            <li><a href="#technology">Technology</a></li> <!-- Navigation link -->
+            <li><a href="#studying">Studying</a></li> <!-- Navigation link -->
+            <li><a href="#balance">Balance</a></li> <!-- Navigation link -->
+        </ul>
+    </nav>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Student Productivity To-Do List</h1> <!-- Header title -->
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Setting Up for Productivity Section -->
+        <section id="setup">
+            <h3>🛠 Setting Up for Productivity</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Set SMART goals</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Prioritize tasks effectively</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Break down large tasks</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Set a weekly review</label></div> <!-- Task item -->
+            </div>
+        </section>
+
+        <!-- Managing Time Efficiently Section -->
+        <section id="time-management">
+            <h3>⏳ Managing Time Efficiently</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Use a calendar for planning</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Create daily to-do lists</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Apply time blocking</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Set personal deadlines</label></div> <!-- Task item -->
+            </div>
+        </section>
+
+        <!-- Staying Focused Section -->
+        <section id="focus">
+            <h3>🎯 Staying Focused</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Eliminate distractions</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Use the Pomodoro technique</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Practice mindfulness</label></div> <!-- Task item -->
+            </div>
+        </section>
+
+        <!-- Leveraging Technology Section -->
+        <section id="technology">
+            <h3>💻 Leveraging Technology</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Use a task management app</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Organize notes with an app</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Track time with productivity apps</label></div> <!-- Task item -->
+            </div>
+        </section>
+
+        <!-- Studying Smarter Section -->
+        <section id="studying">
+            <h3>📚 Studying Smarter</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Use Active Recall</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Apply Spaced Repetition</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Take effective notes</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Join a study group</label></div> <!-- Task item -->
+            </div>
+        </section>
+
+        <!-- Maintaining Work-Life Balance Section -->
+        <section id="balance">
+            <h3>⚖️ Maintaining Work-Life Balance</h3> <!-- Section title -->
+            <div class="task-grid">
+                <div class="task"><input type="checkbox"><label> Get 7-9 hours of sleep</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Exercise regularly</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Spend time with family & friends</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Engage in hobbies</label></div> <!-- Task item -->
+                <div class="task"><input type="checkbox"><label> Practice mindfulness</label></div> <!-- Task item -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2025 Student Productivity. All rights reserved.</p> <!-- Footer text -->
+    </footer>
+
+    <!-- JavaScript for Hamburger Menu -->
+    <script>
+        function toggleMenu() {
+            const navMenu = document.getElementById('nav-menu');
+            navMenu.classList.toggle('active'); // Toggles the mobile menu
+        }
+    </script>
+</body>
+</html>
